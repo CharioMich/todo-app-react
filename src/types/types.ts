@@ -1,12 +1,14 @@
 export type toDoProps = {
   id: number;
   text: string;
+  completed: boolean;
 }
 
 export type Action =
   | {type: "ADD"; payload: string}
   | {type: "DELETE"; payload: number}
-  | {type: "EDIT"; payload: { id: number, newText: string }};
+  | {type: "EDIT"; payload: { id: number, newText: string }}
+  | {type: "COMPLETE", payload: number};
 
 export type ToDoFormProps = {
   dispatch: React.Dispatch<Action>

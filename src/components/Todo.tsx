@@ -9,7 +9,8 @@ const toDoReducer = (state: toDoProps[], action: Action): toDoProps[] => {
     case "ADD": {
       const newTodo: toDoProps = {
         id: Date.now(),
-        text: action.payload
+        text: action.payload,
+        completed: false
       }
       return [...state, newTodo];
     }
@@ -21,6 +22,12 @@ const toDoReducer = (state: toDoProps[], action: Action): toDoProps[] => {
         task.id === action.payload.id  // vriskoume to object (task) pou theloume na kanoume edit mesw tou id
         ? {...task, text: action.payload.newText}  // kanoume destructure ta pedia tou object kai allazoume mono to text
         : task
+      );
+    case "COMPLETE":
+      return state.map(task =>
+        task.id === action.payload
+          ? {...task, completed: !task.completed}
+          : task
       );
 
     default:
