@@ -83,7 +83,6 @@ const TodoList = ({todos, dispatch}: todoListProps) => {
                     <Edit size={18} />
                   </button>
                   <button
-                    disabled={task.completed}
                     className="text-red-700 hover:text-red-500 hover:cursor-pointer flex items-center justify-center gap-1"
                     onClick={() => handleDelete(task.id)}
                   >

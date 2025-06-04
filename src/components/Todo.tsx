@@ -1,7 +1,12 @@
 import TodoForm from "./todoForm.tsx";
-import {useReducer} from "react";
+import {useEffect, useReducer} from "react";
 import TodoList from "./TodoList.tsx";
 import type { toDoProps, Action } from "../types/types.ts";
+
+const getInitialTodos = () => {
+  const stored = localStorage.getItem("todos");
+  return stored ? JSON.parse(stored) : [];    // an yparxei, to kanoume apo string se object gia na to xrhsimopoihsoume ston kwdika
+}
 
 const toDoReducer = (state: toDoProps[], action: Action): toDoProps[] => {
   switch (action.type) {
@@ -29,6 +34,9 @@ const toDoReducer = (state: toDoProps[], action: Action): toDoProps[] => {
           ? {...task, completed: !task.completed}
           : task
       );
+    case "CLEAR ALL":
+      return [];
+
 
     default:
       return state;
@@ -37,14 +45,42 @@ const toDoReducer = (state: toDoProps[], action: Action): toDoProps[] => {
 
 const Todo = () => {
 
-  const [todos, dispatch] = useReducer(toDoReducer, [])
+  const [todos, dispatch] = useReducer(toDoReducer, [], getInitialTodos);
+  const totalTasks: number = todos.length;
+  const completedTasks: number = todos.filter(task => task.completed).length;
+  const activeTasks: number = totalTasks - completedTasks;
+
+  useEffect(() => { // trexei kathe fora pou exoume allagh sto todos ( [todos] )
+    localStorage.setItem("todos", JSON.stringify(todos));  // vazoume sto localstorage to todos. (dexetai string)
+  }, [todos]);
+
+  const handleClearAll = () => {
+    dispatch({type: "CLEAR ALL"});
+  }
 
   return (
     <>
-      <div className=" mx-auto p-6">
+      <div className="mx-auto p-6">
         <h1 className="text-center font-bold font-mono text-3xl mb-4">To-Do List</h1>
         <TodoForm dispatch={dispatch} />
         <TodoList todos={todos} dispatch={dispatch}/>
+        { todos.length > 0 && ( // cool way to show button (or more elements) instead of hidden={todos.length === 0}
+          <>
+            <hr className="w-[80%] mt-5 m-auto" />
+            <div className="flex flex-col items-center mt-2 pt-2">
+              <span>Total: {totalTasks}</span>
+              <span>Active: {activeTasks}</span>
+              <span>Completed: {completedTasks}</span>
+            </div>
+            <div className="text-center mt-4">
+              <button
+                className="p-3 text-white rounded bg-red-400 hover:bg-red-600"
+                onClick={handleClearAll}
+                // hidden={todos.length === 0}
+              >Clear all</button>
+            </div>
+          </>
+        )}
       </div>
     </>
   )

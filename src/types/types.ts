@@ -8,7 +8,8 @@ export type Action =
   | {type: "ADD"; payload: string}
   | {type: "DELETE"; payload: number}
   | {type: "EDIT"; payload: { id: number, newText: string }}
-  | {type: "COMPLETE", payload: number};
+  | {type: "COMPLETE", payload: number}
+  | {type: "CLEAR ALL"};
 
 export type ToDoFormProps = {
   dispatch: React.Dispatch<Action>
