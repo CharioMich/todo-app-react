@@ -1,5 +1,5 @@
 import TodoForm from "./todoForm.tsx";
-import {useEffect, useReducer} from "react";
+import {useEffect, useReducer, useRef} from "react";
 import TodoList from "./TodoList.tsx";
 import type { toDoProps, Action } from "../types/types.ts";
 
@@ -45,25 +45,33 @@ const toDoReducer = (state: toDoProps[], action: Action): toDoProps[] => {
 
 const Todo = () => {
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [todos, dispatch] = useReducer(toDoReducer, [], getInitialTodos);
   const totalTasks: number = todos.length;
   const completedTasks: number = todos.filter(task => task.completed).length;
   const activeTasks: number = totalTasks - completedTasks;
 
+  const handleClearAll = () => {
+    inputRef.current?.focus();  // Input gets focus after pressing Clear All button
+
+    dispatch({type: "CLEAR ALL"});
+  }
+
   useEffect(() => { // trexei kathe fora pou exoume allagh sto todos ( [todos] )
     localStorage.setItem("todos", JSON.stringify(todos));  // vazoume sto localstorage to todos. (dexetai string)
   }, [todos]);
 
-  const handleClearAll = () => {
-    dispatch({type: "CLEAR ALL"});
-  }
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [])
 
   return (
     <>
       <div className="mx-auto p-6">
         <h1 className="text-center font-bold font-mono text-3xl mb-4">To-Do List</h1>
-        <TodoForm dispatch={dispatch} />
-        <TodoList todos={todos} dispatch={dispatch}/>
+        <TodoForm dispatch={dispatch} inputRef={inputRef} />
+        <TodoList todos={todos} dispatch={dispatch} />
         { todos.length > 0 && ( // cool way to show button (or more elements) instead of hidden={todos.length === 0}
           <>
             <hr className="w-[80%] mt-5 m-auto" />

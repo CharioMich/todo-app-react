@@ -13,9 +13,10 @@ export type Action =
 
 export type ToDoFormProps = {
   dispatch: React.Dispatch<Action>
+  inputRef: React.RefObject<HTMLInputElement | null>
 }
 
 export type todoListProps = {
   todos: toDoProps[];
-  dispatch: React.Dispatch<Action>
+  dispatch: React.Dispatch<Action>;
 }

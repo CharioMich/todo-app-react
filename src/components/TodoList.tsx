@@ -91,8 +91,6 @@ const TodoList = ({todos, dispatch}: todoListProps) => {
                 </div>
               </>
             )}
-
-
           </li>
           )
         )}
